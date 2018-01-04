@@ -150,7 +150,7 @@ subcommand 'last-build-log' => method() {
 
 	my $first_job = first {
 		$_->{status} ne 'queued'
-	} @{ $first_build_info->{build}{jobs} };
+	} reverse @{ $first_build_info->{build}{jobs} };
 	my $first_job_id = $first_job->{jobId};
 
 
