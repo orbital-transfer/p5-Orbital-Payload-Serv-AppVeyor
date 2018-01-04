@@ -114,17 +114,19 @@ subcommand 'builds' => method() {
 		my $url = "https://ci.appveyor.com/project/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}/build/@{[ $build->{version} ]}";
 		say sprintf(
 			"%s "
-			.
-			colored("%-14s",
+			. colored("%-14s",
 				$build->{status} eq 'queued'   ? 'cyan'
 				: $build->{status} eq 'failed' ? 'red'
 				: $build->{status} eq 'success' ? 'green'
 				: $build->{status} eq 'running' ? 'yellow bold'
 				: $build->{status} eq 'cancelled' ? 'white'
 				: 'reset'
-			) ." %s: <%s>",
+			)
+			. colored("%s", 'yellow')
+			. " %s: <%s>",
 			$build->{version},
 			$build->{status} . ":" ,
+			$build->{branch} .  (exists $build->{pullRequestId} ? " (PR #@{[ $build->{pullRequestId} ]})" : ""),
 			$build->{message},
 			$url
 		);
