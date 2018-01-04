@@ -7,6 +7,7 @@ use CLI::Osprey;
 use JSON::MaybeXS;
 use LWP::UserAgent;
 use List::AllUtils qw(first);
+use Term::ANSIColor;
 
 has token => ( is => 'lazy' );
 
@@ -111,7 +112,22 @@ subcommand 'builds' => method() {
 	my $history = $self->_get_build_history($project_repo);
 	for my $build (@{ $history->{builds} }) {
 		my $url = "https://ci.appveyor.com/project/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}/build/@{[ $build->{version} ]}";
-		say "$build->{status} $build->{version} $build->{message}: <$url>";
+		say sprintf(
+			"%s "
+			.
+			colored("%-14s",
+				$build->{status} eq 'queued'   ? 'cyan'
+				: $build->{status} eq 'failed' ? 'red'
+				: $build->{status} eq 'success' ? 'green'
+				: $build->{status} eq 'running' ? 'yellow bold'
+				: $build->{status} eq 'cancelled' ? 'white'
+				: 'reset'
+			) ." %s: <%s>",
+			$build->{version},
+			$build->{status} . ":" ,
+			$build->{message},
+			$url
+		);
 	}
 };
 
