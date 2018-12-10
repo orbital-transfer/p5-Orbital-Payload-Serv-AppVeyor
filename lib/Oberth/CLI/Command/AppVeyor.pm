@@ -204,6 +204,19 @@ subcommand enable => method() {
 	}
 };
 
+subcommand 'delete-project' => method() {
+	my $gh_slug = $self->_get_github_slug;
+	my $project_repo = $self->_get_project( $gh_slug );
+
+	die "Project not on AppVeyor" unless( $project_repo );
+
+	$self->_delete(
+		"/projects/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}"
+	);
+
+	say "Repo $gh_slug AppVeyor project deleted";
+};
+
 with qw(Oberth::CLI::Command::Role::GitHubRepos);
 
 1;
