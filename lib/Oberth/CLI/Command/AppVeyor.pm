@@ -3,7 +3,9 @@ package Oberth::CLI::Command::AppVeyor;
 # ABSTRACT: A command for AppVeyor
 
 use Moo;
-use CLI::Osprey;
+use CLI::Osprey (
+	desc => 'AppVeyor CI'
+);
 use JSON::MaybeXS;
 use LWP::UserAgent;
 use List::AllUtils qw(first);
