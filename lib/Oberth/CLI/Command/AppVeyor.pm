@@ -10,6 +10,7 @@ use JSON::MaybeXS;
 use LWP::UserAgent;
 use List::AllUtils qw(first);
 use Term::ANSIColor;
+use Browser::Open qw(open_browser);
 
 has token => ( is => 'lazy' );
 
@@ -217,6 +218,15 @@ subcommand 'delete-project' => method() {
 	);
 
 	say "Repo $gh_slug AppVeyor project deleted";
+};
+
+subcommand 'open-in-browser' => method() {
+	my $gh_slug = $self->_get_github_slug;
+	my $project_repo = $self->_get_project( $gh_slug );
+	return unless $project_repo;
+
+	my $url = join "/", 'https://ci.appveyor.com/project', $project_repo->{accountName},  $project_repo->{slug};
+	open_browser( $url );
 };
 
 with qw(Oberth::CLI::Command::Role::GitHubRepos);
