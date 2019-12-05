@@ -104,6 +104,8 @@ method _get_project_settings( $project_repo ) {
 subcommand 'status-badge' => method() {
 	my $gh_slug = $self->_get_github_slug;
 	my $project_repo = $self->_get_project( $gh_slug );
+	return unless $project_repo;
+
 	my $settings = $self->_get_project_settings($project_repo);
 	say "https://ci.appveyor.com/api/projects/status/@{[ $settings->{settings}{statusBadgeId} ]}/branch/master?svg=true";
 };
@@ -111,6 +113,7 @@ subcommand 'status-badge' => method() {
 subcommand 'builds' => method() {
 	my $gh_slug = $self->_get_github_slug;
 	my $project_repo = $self->_get_project( $gh_slug );
+	return unless $project_repo;
 
 	my $history = $self->_get_build_history($project_repo);
 	for my $build (@{ $history->{builds} }) {
@@ -139,6 +142,7 @@ subcommand 'builds' => method() {
 subcommand 'last-build-log' => method() {
 	my $gh_slug = $self->_get_github_slug;
 	my $project_repo = $self->_get_project( $gh_slug );
+	return unless $project_repo;
 
 	my $history = $self->_get_build_history($project_repo);
 	my $first_build = first {
@@ -173,6 +177,7 @@ subcommand 'last-build-log' => method() {
 subcommand 'clear-cache' => method() {
 	my $gh_slug = $self->_get_github_slug;
 	my $project_repo = $self->_get_project( $gh_slug );
+	return unless $project_repo;
 
 	die "Project not on AppVeyor" unless( $project_repo );
 
@@ -186,6 +191,7 @@ subcommand 'clear-cache' => method() {
 subcommand enable => method() {
 	my $gh_slug = $self->_get_github_slug;
 	my $project_repo = $self->_get_project( $gh_slug );
+
 	unless( $project_repo ) {
 		say "Enabling new repo for $gh_slug";
 		$project_repo = $self->_post( '/projects', {
@@ -210,6 +216,7 @@ subcommand enable => method() {
 subcommand 'delete-project' => method() {
 	my $gh_slug = $self->_get_github_slug;
 	my $project_repo = $self->_get_project( $gh_slug );
+	return unless $project_repo;
 
 	die "Project not on AppVeyor" unless( $project_repo );
 
