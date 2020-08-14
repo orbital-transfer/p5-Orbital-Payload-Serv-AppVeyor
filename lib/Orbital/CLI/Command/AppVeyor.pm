@@ -1,5 +1,5 @@
-use Oberth::Manoeuvre::Common::Setup;
-package Oberth::CLI::Command::AppVeyor;
+use Orbital::Transfer::Common::Setup;
+package Orbital::CLI::Command::AppVeyor;
 # ABSTRACT: A command for AppVeyor
 
 use Moo;
@@ -17,7 +17,7 @@ has token => ( is => 'lazy' );
 use constant APPVEYOR_API_ENDPONT => 'https://ci.appveyor.com/api';
 
 method _build_token() {
-	my $token = `git config --global oberth.appveyor-token`;
+	my $token = `git config --global orbital.appveyor-token`;
 	chomp $token;
 
 	$token;
@@ -236,6 +236,6 @@ subcommand 'open-in-browser' => method() {
 	open_browser( $url );
 };
 
-with qw(Oberth::CLI::Command::Role::GitHubRepos);
+with qw(Orbital::CLI::Command::Role::GitHubRepos);
 
 1;
