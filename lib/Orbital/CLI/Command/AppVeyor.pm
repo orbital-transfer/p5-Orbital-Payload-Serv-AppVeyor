@@ -7,70 +7,9 @@ use CLI::Osprey (
 	desc => 'AppVeyor CI'
 );
 use JSON::MaybeXS;
-use LWP::UserAgent;
 use List::AllUtils qw(first);
 use Term::ANSIColor;
 use Browser::Open qw(open_browser);
-
-has token => ( is => 'lazy' );
-
-use constant APPVEYOR_API_ENDPONT => 'https://ci.appveyor.com/api';
-
-method _build_token() {
-	my $token = `git config --global orbital.appveyor-token`;
-	chomp $token;
-
-	$token;
-}
-
-has _ua => ( is => 'lazy' );
-
-method _build__ua() {
-	my $ua = LWP::UserAgent->new;
-	$ua->default_header( Authorization => 'Bearer '. $self->token );
-	$ua->default_header( 'Content-Type' => 'application/json' );
-	$ua->default_header( Accept => 'application/json' );
-
-	$ua;
-}
-
-method _post($endpoint, $payload ) {
-	my $response = $self->_ua->post(
-		APPVEYOR_API_ENDPONT . $endpoint,
-		Content => encode_json($payload)
-	);
-
-	die "POST $endpoint failed: @{[ $response->decoded_content ]}" unless $response->is_success;
-
-	my $response_json = decode_json($response->decoded_content);
-}
-
-method _put($endpoint, $payload ) {
-	my $response = $self->_ua->put(
-		APPVEYOR_API_ENDPONT . $endpoint,
-		Content => encode_json($payload)
-	);
-
-	die "PUT $endpoint failed: @{[ $response->decoded_content ]}" unless $response->is_success;
-}
-
-method _get($endpoint) {
-	my $response = $self->_ua->get(
-		APPVEYOR_API_ENDPONT . $endpoint,
-	);
-
-	die "GET $endpoint failed: @{[ $response->decoded_content ]}" unless $response->is_success;
-
-	my $response_json = decode_json($response->decoded_content);
-}
-
-method _delete($endpoint ) {
-	my $response = $self->_ua->delete(
-		APPVEYOR_API_ENDPONT . $endpoint,
-	);
-
-	die "DELETE $endpoint failed: @{[ $response->decoded_content ]}" unless $response->is_success;
-}
 
 method _get_github_slug() {
 	my $gh = $self->github_repo_origin;
@@ -85,20 +24,6 @@ method _get_project($gh_slug) {
 	} @$projects;
 
 	$project_repo;
-}
-
-method _get_build_history($project_repo) {
-	my $records_per_page = 30;
-	my $history = $self->_get(
-		"/projects/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}"
-		.
-		"/history?recordsNumber=$records_per_page"
-		# [&startBuildId={buildId}&branch={branch}]
-	);
-}
-
-method _get_project_settings( $project_repo ) {
-	my $settings = $self->_get( "/projects/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}/settings" );
 }
 
 subcommand 'status-badge' => method() {
@@ -164,8 +89,8 @@ subcommand 'last-build-log' => method() {
 	{
 		local($\) = ""; # ensure standard $OUTPUT_RECORD_SEPARATOR
 		my $callback = sub { print $_[0] };
-		my $response = $self->_ua->get(
-			APPVEYOR_API_ENDPONT . "/buildjobs/$first_job_id/log",
+		my $response = $self->_client->_ua->get(
+			Orbital::Payload::Service::AppVeyor::APPVEYOR_API_ENDPONT() . "/buildjobs/$first_job_id/log",
 			':content_cb' => $callback,
 		);
 		unless ($response->is_success) {
@@ -247,6 +172,6 @@ subcommand 'list-github-projects' => method() {
 subcommand 'fix-github-permissions-hack'
 	=> 'Orbital::CLI::Command::AppVeyor::FixGitHubPermHack';
 
-with qw(Orbital::CLI::Command::Role::GitHubRepos);
+with qw(Orbital::CLI::Command::Role::GitHubRepos Orbital::CLI::Command::AppVeyor::Role::Client);
 
 1;

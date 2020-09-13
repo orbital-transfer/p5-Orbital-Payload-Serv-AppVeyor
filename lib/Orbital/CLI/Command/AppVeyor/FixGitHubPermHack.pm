@@ -15,8 +15,7 @@ method run() {
 		'project-renard' => 'project-renard',
 		#'zmughal-p5CPAN' =>
 	};
-	my $client = $self->parent_command;
-	my $projects = $client->_get( '/projects' );
+	my $projects = $self->_get( '/projects' );
 	for my $project (@$projects) {
 		next unless $project->{repositoryType} eq 'gitHub';
 		my $gh_slug = $project->{repositoryName};
@@ -24,7 +23,7 @@ method run() {
 		say "$project->{repositoryName} of org $org";
 		say "\thas associated role $github_org_to_appveyor_role->{$org}" if( exists $github_org_to_appveyor_role->{$org} );
 
-		my $settings = $client->_get_project_settings( $project );
+		my $settings = $self->_get_project_settings( $project );
 
 		my $roleAces = $settings->{settings}{securityDescriptor}{roleAces};
 
@@ -50,8 +49,10 @@ method run() {
 
 		#use XXX; XXX $settings->{settings}{securityDescriptor}{roleAces};
 
-		$client->_put( '/projects', $settings->{settings} );
+		$self->_put( '/projects', $settings->{settings} );
 	}
 };
+
+with qw(Orbital::CLI::Command::AppVeyor::Role::Client);
 
 1;
