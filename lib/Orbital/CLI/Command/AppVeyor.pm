@@ -7,24 +7,8 @@ use CLI::Osprey (
 	desc => 'AppVeyor CI'
 );
 use JSON::MaybeXS;
-use List::AllUtils qw(first);
 use Term::ANSIColor;
 use Browser::Open qw(open_browser);
-
-method _get_github_slug() {
-	my $gh = $self->github_repo_origin;
-	my $gh_slug = $gh->namespace . "/" . $gh->name;
-}
-
-method _get_project($gh_slug) {
-	my $projects = $self->_get( '/projects' );
-	my $project_repo = first {
-		$_->{repositoryType} eq 'gitHub'
-		&& $_->{repositoryName} eq $gh_slug,
-	} @$projects;
-
-	$project_repo;
-}
 
 subcommand 'status-badge' => method() {
 	my $gh_slug = $self->_get_github_slug;
@@ -172,6 +156,9 @@ subcommand 'list-github-projects' => method() {
 subcommand 'fix-github-permissions-hack'
 	=> 'Orbital::CLI::Command::AppVeyor::FixGitHubPermHack';
 
-with qw(Orbital::CLI::Command::Role::GitHubRepos Orbital::CLI::Command::AppVeyor::Role::Client);
+with qw(
+	Orbital::CLI::Command::AppVeyor::Role::Client
+	Orbital::CLI::Command::AppVeyor::Role::ProjectFromGitHubRemote
+);
 
 1;
