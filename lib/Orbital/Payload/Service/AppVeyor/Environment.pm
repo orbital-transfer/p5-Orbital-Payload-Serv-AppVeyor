@@ -1,4 +1,4 @@
-package Orbital::Launch::Environment::AppVeyor;
+package Orbital::Payload::Service::AppVeyor::Environment;
 # ABSTRACT: AppVeyor CI environment
 
 use Moo;
