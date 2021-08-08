@@ -75,7 +75,7 @@ subcommand 'last-build-log' => method() {
 		local($\) = ""; # ensure standard $OUTPUT_RECORD_SEPARATOR
 		my $callback = sub { print $_[0] };
 		my $response = $self->_client->_ua->get(
-			Orbital::Payload::Service::AppVeyor::APPVEYOR_API_ENDPONT() . "/buildjobs/$first_job_id/log",
+			Orbital::Payload::Serv::AppVeyor::APPVEYOR_API_ENDPONT() . "/buildjobs/$first_job_id/log",
 			':content_cb' => $callback,
 		);
 		unless ($response->is_success) {
