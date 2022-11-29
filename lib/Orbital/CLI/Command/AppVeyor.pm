@@ -17,7 +17,7 @@ subcommand 'status-badge' => method() {
 	return unless $project_repo;
 
 	my $settings = $self->_get_project_settings($project_repo);
-	say "https://ci.appveyor.com/api/projects/status/@{[ $settings->{settings}{statusBadgeId} ]}/branch/master?svg=true";
+	print "https://ci.appveyor.com/api/projects/status/@{[ $settings->{settings}{statusBadgeId} ]}/branch/master?svg=true", "\n";
 };
 
 subcommand 'builds' => method() {
@@ -28,7 +28,7 @@ subcommand 'builds' => method() {
 	my $history = $self->_get_build_history($project_repo);
 	for my $build (@{ $history->{builds} }) {
 		my $url = "https://ci.appveyor.com/project/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}/build/@{[ $build->{version} ]}";
-		say sprintf(
+		print sprintf(
 			"%s "
 			. colored("%-14s",
 				$build->{status} eq 'queued'   ? 'cyan'
@@ -45,7 +45,7 @@ subcommand 'builds' => method() {
 			$build->{branch} .  (exists $build->{pullRequestId} ? " (PR #@{[ $build->{pullRequestId} ]})" : ""),
 			$build->{message},
 			$url
-		);
+		), "\n";
 	}
 };
 
@@ -95,7 +95,7 @@ subcommand 'clear-cache' => method() {
 		"/projects/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}/buildcache"
 	);
 
-	say "Repo $gh_slug AppVeyor cache cleared";
+	print "Repo $gh_slug AppVeyor cache cleared\n";
 };
 
 subcommand enable => method() {
@@ -103,18 +103,18 @@ subcommand enable => method() {
 	my $project_repo = $self->_get_project( $gh_slug );
 
 	unless( $project_repo ) {
-		say "Enabling new repo for $gh_slug";
+		print "Enabling new repo for $gh_slug\n";
 		$project_repo = $self->_post( '/projects', {
 			repositoryProvider => "gitHub",
 			repositoryName => $gh_slug,
 		});
 	} else {
-		say "Repo for $gh_slug already on AppVeyor";
+		print "Repo for $gh_slug already on AppVeyor\n";
 	}
 
 	my $settings = $self->_get_project_settings($project_repo);
 	unless( $settings->{settings}{name} eq $gh_slug && $settings->{settings}{skipBranchesWithoutAppveyorYml} ) {
-		say "Updating the project name to match $gh_slug and ensuring skipBranchesWithoutAppveyorYml is true";
+		print "Updating the project name to match $gh_slug and ensuring skipBranchesWithoutAppveyorYml is true\n";
 
 		$settings->{settings}{name} = $gh_slug;
 		$settings->{settings}{skipBranchesWithoutAppveyorYml} = JSON->true;
@@ -134,7 +134,7 @@ subcommand 'delete-project' => method() {
 		"/projects/@{[ $project_repo->{accountName} ]}/@{[ $project_repo->{slug} ]}"
 	);
 
-	say "Repo $gh_slug AppVeyor project deleted";
+	print "Repo $gh_slug AppVeyor project deleted\n";
 };
 
 subcommand 'open-in-browser' => method() {
@@ -150,7 +150,7 @@ subcommand 'list-github-projects' => method() {
 	my $projects = $self->_get( '/projects' );
 	for my $project (@$projects) {
 		next unless $project->{repositoryType} eq 'gitHub';
-		say "$project->{repositoryName}"
+		print "$project->{repositoryName}", "\n";
 	}
 };
 

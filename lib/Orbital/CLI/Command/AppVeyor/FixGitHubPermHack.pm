@@ -28,8 +28,8 @@ method fix_permissions_for_project( $project ) {
 
 	my $gh_slug = $project->{repositoryName};
 	my ($org) = $gh_slug =~ m,^([^/]+)/[^/]+$,;
-	say "$project->{repositoryName} of org $org";
-	say "\thas associated role $github_org_to_appveyor_role->{$org}" if( exists $github_org_to_appveyor_role->{$org} );
+	print "$project->{repositoryName} of org $org", "\n";
+	print "\thas associated role $github_org_to_appveyor_role->{$org}" if( exists $github_org_to_appveyor_role->{$org} ), "\n";
 
 	my $settings = $self->_get_project_settings( $project );
 
