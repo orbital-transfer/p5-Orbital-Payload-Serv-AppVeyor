@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::CLI::Command::AppVeyor::FixGitHubPermHack;
 # ABSTRACT: A temporary subcommand for GitHub permissions
 
+use Orbital::Transfer::Common::Setup;
 use Moo;
 use CLI::Osprey;
 use utf8;

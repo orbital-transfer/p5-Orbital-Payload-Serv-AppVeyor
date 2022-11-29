@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::CLI::Command::AppVeyor::Role::ProjectFromGitHubRemote;
 # ABSTRACT: A role to retrieve the project associated with a GitHub remote
 
+use Orbital::Transfer::Common::Setup;
 use Moo::Role;
 use List::AllUtils qw(first);
 

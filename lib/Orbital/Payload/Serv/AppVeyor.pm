@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Serv::AppVeyor;
 # ABSTRACT: Interface to AppVeyor
 
+use Orbital::Transfer::Common::Setup;
 use Moo;
 
 use JSON::MaybeXS;

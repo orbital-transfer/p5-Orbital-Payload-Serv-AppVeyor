@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::CLI::Command::AppVeyor;
 # ABSTRACT: A command for AppVeyor
 
+use Orbital::Transfer::Common::Setup;
 use Moo;
 use CLI::Osprey (
 	desc => 'AppVeyor CI'

@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::CLI::Command::AppVeyor::Role::Client;
 # ABSTRACT: A role to provide client methods
 
+use Orbital::Transfer::Common::Setup;
 use Moo::Role;
 use Orbital::Payload::Serv::AppVeyor;
 
