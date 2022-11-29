@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Orbital::CLI::Command::AppVeyor - A command for AppVeyor
+Orbital::Payload::Serv::AppVeyor - Interface to AppVeyor
 
 =head1 VERSION
 
