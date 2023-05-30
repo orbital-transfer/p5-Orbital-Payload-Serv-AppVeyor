@@ -8,7 +8,7 @@ Orbital::Payload::Serv::AppVeyor - Interface to AppVeyor
 
 =head1 VERSION
 
-version 0.001
+version 0.001000
 
 =head1 AUTHOR
 
