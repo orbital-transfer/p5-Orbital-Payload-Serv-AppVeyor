@@ -4,7 +4,7 @@ package Orbital::CLI::Command::AppVeyor::FixGitHubPermHack;
 
 use Orbital::Transfer::Common::Setup;
 use Moo;
-use CLI::Osprey;
+use CLI::Osprey on_demand => 1;
 use utf8;
 
 use JSON::MaybeXS;

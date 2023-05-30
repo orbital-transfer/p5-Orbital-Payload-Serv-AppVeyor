@@ -5,7 +5,8 @@ package Orbital::CLI::Command::AppVeyor;
 use Orbital::Transfer::Common::Setup;
 use Moo;
 use CLI::Osprey (
-	desc => 'AppVeyor CI'
+	desc => 'AppVeyor CI',
+	on_demand => 1,
 );
 use JSON::MaybeXS;
 use Term::ANSIColor;
