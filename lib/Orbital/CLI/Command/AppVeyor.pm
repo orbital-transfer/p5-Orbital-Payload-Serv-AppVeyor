@@ -11,7 +11,7 @@ use CLI::Osprey (
 use JSON::MaybeXS;
 use Term::ANSIColor;
 use Browser::Open qw(open_browser);
-use List::AllUtils qw(first);
+use List::Util::MaybeXS qw(first);
 
 subcommand 'status-badge' => method() {
 	my $gh_slug = $self->_get_github_slug;

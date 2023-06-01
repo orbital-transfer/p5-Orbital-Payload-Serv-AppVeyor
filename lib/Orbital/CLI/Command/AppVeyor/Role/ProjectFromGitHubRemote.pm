@@ -4,7 +4,7 @@ package Orbital::CLI::Command::AppVeyor::Role::ProjectFromGitHubRemote;
 
 use Orbital::Transfer::Common::Setup;
 use Moo::Role;
-use List::AllUtils qw(first);
+use List::Util::MaybeXS qw(first);
 
 method _get_github_slug() {
 	my $gh = $self->github_repo_origin;
